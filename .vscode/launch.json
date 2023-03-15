@@ -4,7 +4,16 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "name": "RTFM",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--features=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/output/aba2.npy"]
+    
+        },
         {
             "name": "I3D Feature Extraction",
             "type": "python",
@@ -12,8 +21,10 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["--datasetpath=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/samplevideos",
-                     "--outputpath=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/output"]
+            "args": [
+                "--datasetpath=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/samplevideos",
+                "--outputpath=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/output"
+            ]
         }
     ]
 }
