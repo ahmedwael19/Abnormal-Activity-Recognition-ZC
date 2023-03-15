@@ -39,20 +39,15 @@ python -m utils.convert_weights pretrained/i3d_baseline_32x2_IN_pretrain_400k.pk
 ### Run
 1- Extract the I3D features using the code found [here](https://github.com/GowthamGottimukkala/I3D_Feature_Extraction_resnet/tree/4cd6a1d9816096335ddeee3cd1ca67a82ba65f59)
 
-``bash
+```bash
 wget https://dl.fbaipublicfiles.com/video-nonlocal/i3d_baseline_32x2_IN_pretrain_400k.pkl -P pretrained/
 ```
 Convert these weights from caffe2 to pytorch. This is just a simple renaming of the blobs to match the pytorch model.
 
-``bash
-python -m utils.convert_weights pretrained/i3d_baseline_32x2_IN_pretrain_400k.pkl pretrained/i3d_r50_kinetics.pth
-``
-``bash
-python main.py --datasetpath=path/to/dataset --outputpath=output
-``
-
-``bash
-python 
 ```bash
-python main.py --datasetpath=samplevideos/ --outputpath=output
+python -m utils.convert_weights pretrained/i3d_baseline_32x2_IN_pretrain_400k.pkl pretrained/i3d_r50_kinetics.pth
 ```
+```bash
+python main.py --datasetpath=path/to/dataset --outputpath=output
+```
+
