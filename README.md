@@ -54,8 +54,11 @@ python main.py --datasetpath=path/to/dataset --outputpath=output
 ### Run the Abnormal Activity Recogintion code
 The code runs in the inference mode only by default
 ```bash
-python main.py
+python main.py --features /path/to/features_extracted_from_I3D
 ```
-This will 
+If you want to run the code in training and/or testing mode:
+```bash
+python main.py --features /path/to/features_extracted_from_I3D --training
+python main.py --features /path/to/features_extracted_from_I3D --testing
 
 
