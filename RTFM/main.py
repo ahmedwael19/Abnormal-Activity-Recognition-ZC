@@ -25,17 +25,10 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 
 
-import psycopg2
 from datetime import datetime, timezone
 
-print('Connecting to the PostgreSQL database...')
-conn = psycopg2.connect(
-    host="localhost",
-    database="action_activity",
-    user="postgres",
-    password=" ")
 
-cur = conn.cursor()
+
 
 viz = Visualizer(env='shanghai tech 10 crop', use_incoming_socket=False)
 
@@ -75,6 +68,7 @@ if __name__ == '__main__':
     config = Config(args)
     with open( rgb_list , 'w') as f:
         f.write(args.features)
+    video_name = args.features.split("/")[-1].split('.')[0]
     if args.training:
         train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
                                    batch_size=args.batch_size, shuffle=True,
@@ -106,7 +100,6 @@ if __name__ == '__main__':
 
     if args.inference:
         idx_abn, pred = inference(test_loader, model, device)
-      #  pred*=1000
         print(pred.shape)
         x = np.arange(0,len(pred)).T
 
@@ -115,6 +108,7 @@ if __name__ == '__main__':
         plt.ylabel("Score")
         plt.title("Abnormal Activity Detection")
         plt.show()
+        plt.savefig(f'{video_name}'+'.png')
 
 
 

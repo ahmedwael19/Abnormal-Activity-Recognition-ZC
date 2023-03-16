@@ -36,8 +36,8 @@ python -m utils.convert_weights pretrained/i3d_baseline_32x2_IN_pretrain_400k.pk
 --batch_size:        batch size for snippets
 </pre>
 
-### Run
-1- Extract the I3D features using the code found [here](https://github.com/GowthamGottimukkala/I3D_Feature_Extraction_resnet/tree/4cd6a1d9816096335ddeee3cd1ca67a82ba65f59)
+### Run the I3D Feature extracting
+1- Extract the I3D features using the code found [here](https://github.com/ahmedwael19/I3D_Feature_Extraction_resnet)
 
 ```bash
 wget https://dl.fbaipublicfiles.com/video-nonlocal/i3d_baseline_32x2_IN_pretrain_400k.pkl -P pretrained/
@@ -50,4 +50,12 @@ python -m utils.convert_weights pretrained/i3d_baseline_32x2_IN_pretrain_400k.pk
 ```bash
 python main.py --datasetpath=path/to/dataset --outputpath=output
 ```
+
+### Run the Abnormal Activity Recogintion code
+The code runs in the inference mode only by default
+```bash
+python main.py
+```
+This will 
+
 
