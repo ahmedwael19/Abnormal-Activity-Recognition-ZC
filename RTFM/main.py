@@ -6,11 +6,13 @@ from model import Model
 from dataset import Dataset
 from train import train
 from test_10crop import test
+from inference import inference
 from tqdm import tqdm
 from utils import Visualizer
 from config import *
 import argparse
 from datetime import datetime, timezone
+import matplotlib.pyplot as plt
 
 from pathlib import Path
 import sys
@@ -45,7 +47,7 @@ def parse_opts():
     parser.add_argument('--modality', default='RGB', help='the type of the input, RGB,AUDIO, or MIX')
     parser.add_argument('--rgb-list', default=ROOT/'list/ZC-i3d-test-10crop.list', help='list of rgb features ')
     parser.add_argument('--test-rgb-list', default=ROOT/'list/ZC-i3d-test-10crop.list', help='list of test rgb features ')
-    parser.add_argument('--gt', default=ROOT/'gt_a.npy', help='file of ground truth ') ## Changed
+    parser.add_argument('--gt', default=ROOT/'gt_aba2.npy', help='file of ground truth ') ## Changed
     parser.add_argument('--gpus', default=1, type=int, choices=[0], help='gpus')
     parser.add_argument('--lr', type=str, default='[0.001]*15000', help='learning rates for steps(list form)')
     parser.add_argument('--batch-size', type=int, default=8, help='number of instances in a batch of data (default: 16)')
@@ -56,7 +58,10 @@ def parse_opts():
     parser.add_argument('--dataset', default='ZC', help='dataset to train on (default: )')
     parser.add_argument('--plot-freq', type=int, default=10, help='frequency of plotting (default: 10)')
     parser.add_argument('--max-epoch', type=int, default=15000, help='maximum iteration to train (default: 100)')
-    parser.add_argument('--features', default=ROOT/'V (119).npy', help='I3D Features path')
+    parser.add_argument('--features', default=ROOT/'a.npy', help='I3D Features path')
+    parser.add_argument('--inference', default = True, action='store_true', help='run in inference mode')
+    parser.add_argument('--training',default=False, action='store_true', help='run in inference mode')
+    parser.add_argument('--testing',default=False, action='store_true', help='run in inference mode')
 
     opt = parser.parse_args()
     return opt
@@ -64,18 +69,20 @@ def parse_opts():
 
 if __name__ == '__main__':
   #  args = option.parser.parse_args()
+
     args = parse_opts()
     rgb_list = ( args.rgb_list )
     config = Config(args)
     with open( rgb_list , 'w') as f:
-        
         f.write(args.features)
-   # train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
-   #                            batch_size=args.batch_size, shuffle=True,
-   #                            num_workers=0, pin_memory=False, drop_last=True)
-   # train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False),
-    #                           batch_size=args.batch_size, shuffle=True,
-    #                           num_workers=0, pin_memory=False, drop_last=True)
+    if args.training:
+        train_nloader = DataLoader(Dataset(args, test_mode=False, is_normal=True),
+                                   batch_size=args.batch_size, shuffle=True,
+                               num_workers=0, pin_memory=False, drop_last=True)
+        train_aloader = DataLoader(Dataset(args, test_mode=False, is_normal=False),
+                               batch_size=args.batch_size, shuffle=True,
+                               num_workers=0, pin_memory=False, drop_last=True)
+    
     test_loader = DataLoader(Dataset(args, test_mode=True),
                               batch_size=1, shuffle=False,
                               num_workers=0, pin_memory=False)
@@ -94,20 +101,23 @@ if __name__ == '__main__':
     test_info = {"epoch": [], "test_AUC": []}
     best_AUC = -1
   ##  output_path = 'ZC/'   # put your own path here
-    auc, idx_abn = test(test_loader, model, args,viz, device)
-    uid = 10
-    idx_abn = idx_abn[0]
-    for current_frame in idx_abn:
-        dt00 = datetime.now(timezone.utc)
+    if args.testing:
+        auc, idx_abn, pred = test(test_loader, model, args,viz, device)
 
-        cur.execute("INSERT INTO abnormal_outputs (uid , frame_id , cam_id , lab_id , time_stamp) \
-                                        VALUES (%s, %s, %s, %s, %s);" ,     \
-                                           (uid   ,  int(current_frame)  , -1   ,  -1    ,  str(dt00)))
-        conn.commit()
-        uid+=1
-        
-    cur.close()
-    conn.close()
+    if args.inference:
+        idx_abn, pred = inference(test_loader, model, device)
+      #  pred*=1000
+        print(pred.shape)
+        x = np.arange(0,len(pred)).T
+
+        plt.plot(x,pred)
+        plt.xlabel("Frame Number")
+        plt.ylabel("Score")
+        plt.title("Abnormal Activity Detection")
+        plt.show()
+
+
+
 """
     for step in tqdm(
             range(1, args.max_epoch + 1),

@@ -60,5 +60,5 @@ def test(dataloader, model, args, viz, device):
         viz.plot_lines('auc', rec_auc)
         viz.lines('scores', pred)
         viz.lines('roc', tpr, fpr)
-        return rec_auc, idx_abn
+        return rec_auc, idx_abn, pred
 

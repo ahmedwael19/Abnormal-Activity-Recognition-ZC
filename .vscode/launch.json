@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["--features=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/output/aba2.npy"]
+            "args": ["--features=/home/zc/RA/exp/Abnormal-Activity-Recognition-ZC/output/Abuse001_x264.npy"]
     
         },
         {
